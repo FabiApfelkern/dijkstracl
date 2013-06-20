@@ -1,0 +1,29 @@
+# Object files
+*.o
+*.d
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+
+.project
+.cproject
+.metadata
+
+psys
+*.txt
+
+doxygen
+algorithms_test
+dijkstracl
