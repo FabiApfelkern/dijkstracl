@@ -175,6 +175,8 @@ Route calculatePath(char option, int argc, char **argv) {
 				printf("Done!\n");
 			}
 
+			printf("The distance from the start node to the last node %d is: %d\n", (route.countNodes)-1, route.distance[(route.countNodes)-1]);
+
 			if(argc == 4) {
 				//char* resultName = argv[3];
 				//gcSaveResult(resultName, predec, distance, graph.countNodes);
@@ -208,6 +210,7 @@ void getResult(int target, int *predec, int *distance, int countNodes) {
 			count++;
 			route = realloc(route, (count+1)*sizeof(int));
 			lTarget = predec[lTarget];
+
 		}
 		route[count] = 0;
 
@@ -237,10 +240,15 @@ void help(void){
 
     printf("\n=== DIJKSTRA CL ===\n\n");
     printf("Options:\n");
-    printf("\t-%c: %s\n", BASIC, BASICTEXT);
-    printf("\t-%c: %s\n", CL, CLTEXT);
-    printf("\t-%c: %s\n", GEN, GENTEXT);
-    printf("\t-%c: %s\n", OPT, OPTTEXT);
+    printf("\t-%c <name>: %s\n", GEN, GENTEXT);
+    printf("\t-%c <graph> [node]: %s\n", BASIC, BASICTEXT);
+    printf("\t-%c <graph> [node]: %s\n", CL, CLTEXT);
+    printf("\t-%c <graph> [node]: %s\n", OPT, OPTTEXT);
+    printf("Instructions:\n");
+    printf("\tFirst Step: Generate a new graph, e.g.: dijkstracl -g example \n");
+    printf("\tSecond Step: Calculate the distance, e.g.: dijkstracl -b example \n");
+    printf("\tAdding a node number to the command (dijkstracl -b example 6)\n");
+    printf("\twill verbose the exact route to the specified node.\n");
     printf("\n");
 
 }

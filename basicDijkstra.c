@@ -61,7 +61,7 @@ void basicDijkstra(Graph *graph, Route *route, int start){
 			 * but the test data is not a valid graph.
 			 *
 			 */
-			if(q[i] == 0 && route->distance[i] < smallestDist) {
+			if(q[i] == 0 && route->distance[i] <= smallestDist) {
 				node1 = i;
 				smallestDist = route->distance[i];
 			}

@@ -68,7 +68,6 @@ void advDijkstra(Graph *graph, Route *route, int start) {
 				int edge;
 				for (i = begin; i < end; i++) {
 					edge = graph->edges[i];
-
 					old = route->distance[t] + graph->weights[i];
 					if (old < updateDistance[edge]) {
 						updateDistance[edge] = old;
