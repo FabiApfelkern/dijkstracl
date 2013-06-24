@@ -19,7 +19,7 @@ void test__advDijkstra(Graph *graph, Route *route, int start)
 	assert(route->distance[4] == 6);
 	assert(route->distance[5] == 5);
 
-	assert(route->predec[0] == 0);
+	assert(route->predec[0] == -1);
 	assert(route->predec[1] == 0);
 	assert(route->predec[2] == 5);
 	assert(route->predec[3] == 0);
@@ -45,7 +45,7 @@ void test__clDijkstra(Graph *graph, Route *route, int start)
 //	}
 
 
-	assert(route->predec[0] == 0);
+	assert(route->predec[0] == -1);
 	assert(route->predec[1] == 0);
 	assert(route->predec[2] == 5);
 	assert(route->predec[3] == 0);
@@ -70,7 +70,7 @@ void test__basicDijkstra(Graph *graph, Route *route, int start)
 	assert(route->distance[4] == 6);
 	assert(route->distance[5] == 5);
 
-	assert(route->predec[0] == 0);
+	assert(route->predec[0] == -1);
 	assert(route->predec[1] == 0);
 	assert(route->predec[2] == 5);
 	assert(route->predec[3] == 0);

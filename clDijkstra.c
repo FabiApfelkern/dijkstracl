@@ -59,7 +59,7 @@ void clInit(Route *route, int start, int *nodes) {
 	int i;
 	for (i = 0; i < route->countNodes; i++) {
 		route->distance[i] = I;
-		route->predec[i] = 0;
+		route->predec[i] = -1;
 		nodes[i] = 0;
 	}
 	route->distance[start] = 0;

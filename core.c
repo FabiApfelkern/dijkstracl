@@ -201,6 +201,11 @@ void getResult(int target, int *predec, int *distance, int countNodes) {
 	int i = 0;
 	int count = 0;
 
+//	for(i = 0; i<countNodes;i++) {
+//		printf("%d ", predec[i]);
+//
+//	}
+
 	if(target >= countNodes) {
 		printf("ERROR!. The target does not exist.\n");
 	} else {
@@ -210,7 +215,6 @@ void getResult(int target, int *predec, int *distance, int countNodes) {
 			count++;
 			route = realloc(route, (count+1)*sizeof(int));
 			lTarget = predec[lTarget];
-
 		}
 		route[count] = 0;
 

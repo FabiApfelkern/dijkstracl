@@ -19,6 +19,7 @@ __kernel void dijkstraKernel1(
 		)
 {
 	
+
 	int t = get_global_id(0);
 	int old, i;
 	if (visited[t] == 0) {

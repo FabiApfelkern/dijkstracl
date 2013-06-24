@@ -25,7 +25,7 @@ void advInit(Route *route, int start, int *nodes) {
 	int i;
 	for (i = 0; i < route->countNodes; i++) {
 		route->distance[i] = I;
-		route->predec[i] = 0;
+		route->predec[i] = -1;
 		nodes[i] = 0;
 	}
 	route->distance[start] = 0;
@@ -42,7 +42,7 @@ void advDijkstra(Graph *graph, Route *route, int start) {
 	int i;
 	for(i = 0; i < graph->countNodes; i++) {
 		updateDistance[i] = I;
-		updatePredec[i] = 0;
+		updatePredec[i] = -1;
 	}
 	updateDistance[0] = 0;
 
@@ -52,7 +52,6 @@ void advDijkstra(Graph *graph, Route *route, int start) {
 		int t;
 		for (t = 0; t < graph->countNodes; t++) {
 
-			int lastEdge;
 			int old, i;
 			if (q[t] == 0) {
 				q[t] = 1;
@@ -69,22 +68,26 @@ void advDijkstra(Graph *graph, Route *route, int start) {
 				for (i = begin; i < end; i++) {
 					edge = graph->edges[i];
 					old = route->distance[t] + graph->weights[i];
-					if (old < updateDistance[edge]) {
+					if (old <= updateDistance[edge]) {
 						updateDistance[edge] = old;
-						lastEdge = t;
+						updatePredec[edge] = t;
 					}
 
 				}
 			}
 
+
+		}
+
+		for (t = 0; t < graph->countNodes; t++) {
 			if (route->distance[t] > updateDistance[t]) {
 				route->distance[t] = updateDistance[t];
-				route->predec[t] = lastEdge;
+				route->predec[t] = updatePredec[t];
 				q[t] = 0;
 			}
 
 			updateDistance[t] = route->distance[t];
-
+			updatePredec[t] = route->predec[t];
 		}
 
 	}
