@@ -5,8 +5,8 @@
  *      Author: fabi
  */
 
-#ifndef BASICDIJKSTRA_H_
-#define BASICDIJKSTRA_H_
+#ifndef CLDIJKSTRA_H_
+#define CLDIJKSTRA_H_
 
 #include <stdlib.h>
 #include "graphStruct.h"

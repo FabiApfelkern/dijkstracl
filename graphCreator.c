@@ -65,7 +65,7 @@ int gcSaveGraph(Graph *graph) {
 		return 0;
 	}
 
-	int i,j;
+	int i;
 
 	fprintf(file, "%d %d %d\n", graph->countNodes, graph->countEdges, graph->nmbEdges);
 	for (i = 0; i < graph->countNodes; i++) {
@@ -91,24 +91,25 @@ void gcOpenGraph(Graph *graph) {
 	FILE *file;
 	char* path = gcBuildPath(graph->name);
 	file = fopen(path, "r");
+	int scan = 0;
 
 	int i, dummy;
-    fscanf(file, "%d %d %d\n", &dummy, &dummy, &dummy);
+	scan = fscanf(file, "%d %d %d\n", &dummy, &dummy, &dummy);
 
 
 	for (i = 0; i < graph->countNodes; i++) {
-		fscanf(file, "%d ", &graph->nodes[i]);
+		scan = fscanf(file, "%d ", &graph->nodes[i]);
 	}
 
 	for (i = 0; i < graph->countEdges; i++) {
-		fscanf(file, "%d ", &graph->edges[i]);
+		scan = fscanf(file, "%d ", &graph->edges[i]);
 	}
 
 	for (i = 0; i < graph->countEdges; i++) {
-		fscanf(file, "%d ", &graph->weights[i]);
+		scan = fscanf(file, "%d ", &graph->weights[i]);
 	}
 
-
+	(void)scan;
 	fclose(file);
 }
 
@@ -116,7 +117,8 @@ void gcGetDimension(Graph *graph) {
 	FILE *file;
 	char* path = gcBuildPath(graph->name);
 	file = fopen(path, "r");
-	fscanf(file, "%d %d %d\n", &graph->countNodes, &graph->countEdges, &graph->nmbEdges);
+	int scan = fscanf(file, "%d %d %d\n", &graph->countNodes, &graph->countEdges, &graph->nmbEdges);
+	(void)scan;
 	fclose(file);
 }
 

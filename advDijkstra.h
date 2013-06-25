@@ -5,8 +5,8 @@
  *      Author: fabi
  */
 
-#ifndef BASICDIJKSTRA_H_
-#define BASICDIJKSTRA_H_
+#ifndef ADVDIJKSTRA_H_
+#define ADVDIJKSTRA_H_
 
 #include <stdlib.h>
 #include "graphStruct.h"

@@ -51,7 +51,7 @@ void basicDijkstra(Graph *graph, Route *route, int start){
 	while(!nodesEmpty(q, graph->countNodes)) {
 		int smallestDist = I;
 		int i;
-		int node1, node2;
+		int node1 = 0;
 
 		// Search node with smallest value in distance
 		// Do this in parallel

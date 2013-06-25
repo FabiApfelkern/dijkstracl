@@ -171,7 +171,7 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 	clInit(route, start, nodes);
 
 	int *updateDistance = malloc(graph->countNodes * sizeof(int));
-	int i,j;
+	int i;
 	for(i = 0; i < graph->countNodes; i++) {
 		updateDistance[i] = I;
 	}

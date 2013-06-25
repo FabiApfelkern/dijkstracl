@@ -49,6 +49,7 @@ void createGraph(int argc, char **argv) {
 		int countNodes;
 		int countEdges;
 		int step = 1;
+		int scan;
 
 		if(strcmp("ref", graphName) == 0) {
 			printf("ERROR! This graph name is reserved and read-only.\n");
@@ -62,7 +63,7 @@ void createGraph(int argc, char **argv) {
 				case 1:
 					if(gcGraphExists(graphName) == 1) {
 						printf("The graph %s does already exist. Do you want to override it? [n/y]\n", graphName);
-						scanf("%c", &input);
+						scan = scanf("%c", &input);
 						if(input == YES) {
 							step++;
 						} else {
@@ -75,7 +76,7 @@ void createGraph(int argc, char **argv) {
 
 				case 2:
 					printf("How many nodes do you want to create?\n");
-					scanf("%d", &countNodes);
+					scan = scanf("%d", &countNodes);
 					if(countNodes >= 1 && countNodes < INT_MAX) {
 						step++;
 					} else {
@@ -85,7 +86,7 @@ void createGraph(int argc, char **argv) {
 
 				case 3:
 					printf("How many connections does each node has?\n");
-					scanf("%d", &countEdges);
+					scan = scanf("%d", &countEdges);
 					if (countEdges >= 1 && countEdges < INT_MAX) {
 						step++;
 					} else {
@@ -124,7 +125,7 @@ void createGraph(int argc, char **argv) {
 
 			fseek(stdin,0,SEEK_END);
 		}
-
+		(void)scan;
 
 	} else {
 		printf(ERROROPT);
@@ -133,6 +134,8 @@ void createGraph(int argc, char **argv) {
 }
 
 Route calculatePath(char option, int argc, char **argv) {
+
+	Route route;
 
 	if(argc >= 3) {
 		char* graphName = argv[2];
@@ -151,8 +154,6 @@ Route calculatePath(char option, int argc, char **argv) {
 			graph.weights = malloc(graph.countEdges * sizeof(int));
 
 			gcOpenGraph(&graph);
-
-			Route route;
 			route.countNodes = graph.countNodes;
 			route.predec = malloc(graph.countNodes * sizeof(int));
 			route.distance = malloc(graph.countNodes * sizeof(int));
@@ -192,6 +193,7 @@ Route calculatePath(char option, int argc, char **argv) {
 		printf(ERROROPT);
 	}
 
+	return route;
 }
 
 void getResult(int target, int *predec, int *distance, int countNodes) {
@@ -229,9 +231,6 @@ void getResult(int target, int *predec, int *distance, int countNodes) {
 		}
 
 	}
-
-	printf("\n", route[i]);
-
 	free(route);
 	}
 }
@@ -290,7 +289,7 @@ int mainProgram(int argc, char **argv) {
 		}
 
 	}
-
+	return EXIT_SUCCESS;
 }
 
 
