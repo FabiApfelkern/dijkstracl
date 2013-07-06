@@ -20,6 +20,7 @@
 #include "advDijkstra.h"
 #include "graphStruct.h"
 
+struct timespec CALCULATION_START, CALCULATION_END;
 
 Graph initGraph(char* graphName, int countNodes, int countEdges);
 /**

@@ -28,3 +28,6 @@ doxygen
 algorithms_test
 dijkstracl
 .settings
+
+graphs
+!graphs/ref

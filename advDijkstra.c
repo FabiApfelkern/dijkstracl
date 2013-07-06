@@ -9,6 +9,8 @@
 #define I 998
 
 #include "advDijkstra.h"
+#include "core.h"
+#include <time.h>
 
 int advNodesEmpty(int *nodes, int countNodes) {
 	int i;
@@ -34,6 +36,7 @@ void advInit(Route *route, int start, int *nodes) {
 
 void advDijkstra(Graph *graph, Route *route, int start) {
 
+	clock_gettime(CLOCK_REALTIME, &CALCULATION_START);
 	int *q = malloc(graph->countNodes * sizeof(int));
 	advInit(route, start, q);
 
@@ -93,5 +96,5 @@ void advDijkstra(Graph *graph, Route *route, int start) {
 	}
 
 	free(q);
-
+	clock_gettime(CLOCK_REALTIME, &CALCULATION_END);
 }

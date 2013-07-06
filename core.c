@@ -1,6 +1,8 @@
 #include "core.h"
-
+#include <sys/time.h>
+#include <time.h>
 #define I 998
+#define BILLION 1E9
 
 #define YES 'y'
 #define NO 'n'
@@ -22,6 +24,7 @@ const char* OPTTEXT = "Calculates the shortest route with an optimized Dijkstra 
 
 #define GEN 'g'
 const char* GENTEXT = "Generates a new graph";
+
 
 Graph initGraph(char* graphName, int countNodes, int countEdges) {
 	Graph graph;
@@ -153,6 +156,7 @@ Route calculatePath(char option, int argc, char **argv) {
 			graph.edges = malloc(graph.countEdges * sizeof(int));
 			graph.weights = malloc(graph.countEdges * sizeof(int));
 
+			printf("Reading the graph ...\n");
 			gcOpenGraph(&graph);
 			route.countNodes = graph.countNodes;
 			route.predec = malloc(graph.countNodes * sizeof(int));
@@ -179,8 +183,6 @@ Route calculatePath(char option, int argc, char **argv) {
 			printf("The distance from the start node to the last node %d is: %d\n", (route.countNodes)-1, route.distance[(route.countNodes)-1]);
 
 			if(argc == 4) {
-				//char* resultName = argv[3];
-				//gcSaveResult(resultName, predec, distance, graph.countNodes);
 				int target = atoi(argv[3]);
 				getResult(target, route.predec, route.distance, graph.countNodes);
 			}
@@ -192,6 +194,9 @@ Route calculatePath(char option, int argc, char **argv) {
 	} else {
 		printf(ERROROPT);
 	}
+
+	double accum = (CALCULATION_END.tv_sec - CALCULATION_START.tv_sec) + (CALCULATION_END.tv_nsec - CALCULATION_START.tv_nsec) / BILLION;
+	printf("The pure calculation took %lf seconds.\n", accum);
 
 	return route;
 }
@@ -260,6 +265,7 @@ int mainProgram(int argc, char **argv) {
 
 	char option;
 
+
 	if(argc == 1) {
 		help();
 	} else {
@@ -289,9 +295,9 @@ int mainProgram(int argc, char **argv) {
 		}
 
 	}
+
 	return EXIT_SUCCESS;
 }
-
 
 void myClock(time_t start) {
 	printf("%.1f: ",difftime(time(NULL),start));

@@ -12,7 +12,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <CL/cl.h>
+#include <math.h>
 #include "clDijkstra.h"
+
+#include "core.h"
+#include <time.h>
 
 static char *read_file_contents(const char *filename)
 {
@@ -111,6 +115,16 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 		goto out;
 	}
 
+	/* Now get the device info of the choosen device */
+	size_t maxWorkGroupSize;
+	error = clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, sizeof(size_t), &maxWorkGroupSize, NULL);
+	if (error != CL_SUCCESS)
+	{
+		fprintf(stderr,"Couldn't get device info\n");
+		goto out;
+	}
+	printf("Max. Workgroup Size = %lu\n", maxWorkGroupSize);
+
 	/**** Phase 2: Create the context and all of its associates *****/
 
 	/* Create a CL context for the selected device, note that nVidia's OpenCL requires the platform property */
@@ -185,8 +199,11 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 	cl_mem clPreced = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countNodes, route->predec, &error);
 	cl_mem clVisited = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countNodes, nodes, &error);
 	cl_mem clNodes = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countNodes, graph->nodes, &error);
+	free(graph->nodes);
 	cl_mem clEdges = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countEdges, graph->edges, &error);
+	free(graph->edges);
 	cl_mem clWeights = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countEdges, graph->weights, &error);
+	free(graph->weights);
 	cl_mem clLastEdge = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int), &lastEdge, &error);
 	if (error != CL_SUCCESS)
 	{
@@ -242,7 +259,9 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 	cl_event readDone;
 
 	const size_t worksize = graph->countNodes;
-	// As long there are any nodes left
+
+	clock_gettime(CLOCK_REALTIME, &CALCULATION_START);
+	// As long there are any nodes lefts
 	while (!clNodesEmpty(nodes, graph->countNodes)) {
 
 
@@ -269,6 +288,7 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 		clWaitForEvents(1, &readDone);
 
 	}
+	clock_gettime(CLOCK_REALTIME, &CALCULATION_END);
 
 	/* Read the result back into buf2 */
 	error = clEnqueueReadBuffer(cq, clDistance, CL_FALSE, 0, sizeof(int)*graph->countNodes, route->distance, 0, NULL, &readDone);

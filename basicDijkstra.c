@@ -9,6 +9,8 @@
 #define I 998
 
 #include "basicDijkstra.h"
+#include "core.h"
+#include <time.h>
 
 int nodesEmpty(int *nodes, int countNodes) {
 	int i;
@@ -43,7 +45,7 @@ void updateDistance(Route *route, int weight, int node1, int node2) {
 }
 
 void basicDijkstra(Graph *graph, Route *route, int start){
-
+	clock_gettime(CLOCK_REALTIME, &CALCULATION_START);
 	int *q = malloc(graph->countNodes * sizeof(int));
 	init(route, start, q);
 
@@ -89,5 +91,5 @@ void basicDijkstra(Graph *graph, Route *route, int start){
 	}
 
 	free(q);
-
+	clock_gettime(CLOCK_REALTIME, &CALCULATION_END);
 }
