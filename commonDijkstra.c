@@ -1,8 +1,5 @@
-/*
- * commonDijkstra.c
- *
- *  Created on: Jul 8, 2013
- *      Author: fabi
+/**
+ * @file commonDijkstra.c
  */
 
 #include "commonDijkstra.h"

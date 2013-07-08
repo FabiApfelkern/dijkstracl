@@ -1,8 +1,5 @@
-/*
- * basicDijkstra.c
- *
- *  Created on: May 18, 2013
- *      Author: fabi
+/**
+ * @file clDijkstra.c
  */
 
 #include <stdio.h>
@@ -19,7 +16,7 @@
 void clDijkstra(Graph *graph, Route *route, int start) {
 
 	/* The Kernels */
-	char *dijkstraKernel = "dijkstra.cl";
+	char *dijkstraKernel = "clDijstraKernel.txt";
 
 	/* The error variable. We need it everywhere */
 	cl_int error;

@@ -1,8 +1,5 @@
-/*
- * graphStruct.h
- *
- *  Created on: May 28, 2013
- *      Author: fabi
+/**
+ * @file graphStruct.h
  */
 
 #ifndef GRAPHSTRUCT_H_

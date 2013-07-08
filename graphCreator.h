@@ -1,8 +1,5 @@
-/*
- * fileWriter.h
- *
- *  Created on: May 18, 2013
- *      Author: fabi
+/**
+ * @file graphCreator.h
  */
 
 #ifndef GRAPHCREATOR_H_

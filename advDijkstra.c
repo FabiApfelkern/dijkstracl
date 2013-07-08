@@ -1,10 +1,6 @@
-/*
- * basicDijkstra.c
- *
- *  Created on: May 18, 2013
- *      Author: fabi
+/**
+ * @file advDijkstra.c
  */
-
 
 #include "advDijkstra.h"
 #include "commonDijkstra.h"

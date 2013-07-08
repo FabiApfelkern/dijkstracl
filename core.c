@@ -1,10 +1,15 @@
-#include "core.h"
-#include <sys/time.h>
-#include <time.h>
-#define BILLION 1E9
+/**
+ * @file core.c
+ */
 
+#include "core.h"
+
+// Some Pre-Prop Constants
+#define BILLION 1E9
 #define YES 'y'
 #define NO 'n'
+
+// Error messages
 #define ERROROPT "ERROR! To many, to less or wrong options!\n\n"
 #define ERRORUNKNOWN "Fehler! Unbekannte Option.\n"
 #define ERRORFILE "Fehler! Erstellen der temporären Datei fehlgeschlagen. Überprüfen Sie Ihre Berechtigung\n"
@@ -24,25 +29,26 @@ const char* OPTTEXT = "Calculates the shortest route with an optimized Dijkstra 
 #define GEN 'g'
 const char* GENTEXT = "Generates a new graph";
 
+/**
+ * Display the help text
+ */
+void help(void){
 
-Graph initGraph(char* graphName, int countNodes, int countEdges) {
-	Graph graph;
-	graph.name = graphName;
-	graph.nmbEdges = countEdges;
-	graph.countNodes = countNodes;
-	graph.countEdges = graph.nmbEdges * graph.countNodes;
-	graph.nodes = malloc(graph.countNodes *  sizeof(int));
-	graph.edges = malloc(graph.countEdges * sizeof(int));
-	graph.weights = malloc(graph.countEdges * sizeof(int));
-	return graph;
+    printf("\n=== DIJKSTRA CL ===\n\n");
+    printf("Options:\n");
+    printf("\t-%c <name> <no. of nodes> [no. of edges]: %s\n", GEN, GENTEXT);
+    printf("\t-%c <graph> [node]: %s\n", BASIC, BASICTEXT);
+    printf("\t-%c <graph> [node]: %s\n", CL, CLTEXT);
+    printf("\t-%c <graph> [node]: %s\n", OPT, OPTTEXT);
+    printf("Instructions:\n");
+    printf("\tFirst Step: Generate a new graph, e.g.: dijkstracl -g example \n");
+    printf("\tSecond Step: Calculate the distance, e.g.: dijkstracl -b example \n");
+    printf("\tAdding a node number to the command (dijkstracl -b example 6)\n");
+    printf("\twill verbose the exact route to the specified node.\n");
+    printf("\n");
+
 }
 
-/**
- * Displays the interactive mode to create a graph.
- *
- * @param argc
- * @param argv
- */
 void createGraph(int argc, char **argv) {
 
 	if(argc >= 4) {
@@ -148,7 +154,7 @@ Route calculatePath(char option, int argc, char **argv) {
 
 			if(argc == 4) {
 				int target = atoi(argv[3]);
-				getResult(target, route.predec, route.distance, graph.countNodes);
+				getResult(target, &route);
 			}
 
 			free(route.predec);
@@ -166,7 +172,7 @@ Route calculatePath(char option, int argc, char **argv) {
 	return route;
 }
 
-void getResult(int target, int *predec, int *distance, int countNodes) {
+void getResult(int target, Route *result) {
 
 	int lTarget = target;
 	int allocSize = 10;
@@ -174,7 +180,7 @@ void getResult(int target, int *predec, int *distance, int countNodes) {
 	int i = 0;
 	int count = 0;
 
-	if(target >= countNodes) {
+	if(target >= result->countNodes) {
 		printf("ERROR!. The target does not exist.\n");
 	} else {
 
@@ -188,7 +194,7 @@ void getResult(int target, int *predec, int *distance, int countNodes) {
 				route = realloc(route, sizeof(int)*allocSize);
 			}
 
-			lTarget = predec[lTarget];
+			lTarget = result->predec[lTarget];
 			if(lTarget == -1){
 				lTarget = 0;
 				success = 0;
@@ -197,7 +203,7 @@ void getResult(int target, int *predec, int *distance, int countNodes) {
 
 		if (success) {
 			route[count] = 0;
-			printf("The distance from the start node to node %d is: %d\n", target, distance[target]);
+			printf("The distance from the start node to node %d is: %d\n", target, result->distance[target]);
 			printf("The best route: ");
 
 			for (i = count; i >= 0; i--) {
@@ -216,26 +222,6 @@ void getResult(int target, int *predec, int *distance, int countNodes) {
 	printf("\n");
 	free(route);
 	}
-}
-
-/**
- * Display the help text
- */
-void help(void){
-
-    printf("\n=== DIJKSTRA CL ===\n\n");
-    printf("Options:\n");
-    printf("\t-%c <name> <no. of nodes> [no. of edges]: %s\n", GEN, GENTEXT);
-    printf("\t-%c <graph> [node]: %s\n", BASIC, BASICTEXT);
-    printf("\t-%c <graph> [node]: %s\n", CL, CLTEXT);
-    printf("\t-%c <graph> [node]: %s\n", OPT, OPTTEXT);
-    printf("Instructions:\n");
-    printf("\tFirst Step: Generate a new graph, e.g.: dijkstracl -g example \n");
-    printf("\tSecond Step: Calculate the distance, e.g.: dijkstracl -b example \n");
-    printf("\tAdding a node number to the command (dijkstracl -b example 6)\n");
-    printf("\twill verbose the exact route to the specified node.\n");
-    printf("\n");
-
 }
 
 int mainProgram(int argc, char **argv) {

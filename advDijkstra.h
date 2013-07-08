@@ -1,8 +1,5 @@
-/*
- * basicDijkstra.h
- *
- *  Created on: May 18, 2013
- *      Author: fabi
+/**
+ * @file advDijkstra.h
  */
 
 #ifndef ADVDIJKSTRA_H_

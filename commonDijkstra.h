@@ -1,9 +1,7 @@
-/*
- * commonDijkstra.h
- *
- *  Created on: Jul 8, 2013
- *      Author: fabi
+/**
+ * @file commonDijkstra.h
  */
+
 
 #ifndef COMMONDIJKSTRA_H_
 #define COMMONDIJKSTRA_H_

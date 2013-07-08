@@ -1,8 +1,7 @@
 /**
- * This is the simple kernel. For the current work item,
- * which can be addressed using the value returned by
- * get_global_id(0), copy the contents from src to dest.
+ * @file clDijstraKernel.cl
  */
+
 #define I 998
 
 __kernel void dijkstraKernel1(

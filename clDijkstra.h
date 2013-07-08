@@ -1,8 +1,5 @@
-/*
- * basicDijkstra.h
- *
- *  Created on: May 18, 2013
- *      Author: fabi
+/**
+ * @file clDijkstra.h
  */
 
 #ifndef CLDIJKSTRA_H_

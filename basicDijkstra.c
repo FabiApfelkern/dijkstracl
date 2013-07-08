@@ -1,8 +1,5 @@
-/*
- * basicDijkstra.c
- *
- *  Created on: May 18, 2013
- *      Author: fabi
+/**
+ * @file basicDijkstra.c
  */
 
 

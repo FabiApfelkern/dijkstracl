@@ -1,3 +1,7 @@
+/**
+ * @file algorithms_test.c
+ */
+
 #include <assert.h>
 
 #include "graphCreator.c"
@@ -43,10 +47,10 @@ void test__clDijkstra(Graph *graph, Route *route, int start)
 	assert(route->distance[5] == 5);
 
 
-	int i;
-	for(i=0;i<route->countNodes;i++) {
-		printf("%d\n", route->predec[i]);
-	}
+//	int i;
+//	for(i=0;i<route->countNodes;i++) {
+//		printf("%d\n", route->predec[i]);
+//	}
 
 
 	assert(route->predec[0] == -1);
