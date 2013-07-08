@@ -22,6 +22,8 @@
 
 struct timespec CALCULATION_START, CALCULATION_END;
 
+#define I 998
+
 Graph initGraph(char* graphName, int countNodes, int countEdges);
 /**
  * Displays the interactive mode to create a graph.

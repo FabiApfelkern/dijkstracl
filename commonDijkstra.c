@@ -5,8 +5,8 @@
  *      Author: fabi
  */
 
-#define I 998
 #include "commonDijkstra.h"
+#include "core.h"
 
 int nodesEmpty(int *nodes, int countNodes) {
 	int i;

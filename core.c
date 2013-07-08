@@ -1,7 +1,6 @@
 #include "core.h"
 #include <sys/time.h>
 #include <time.h>
-#define I 998
 #define BILLION 1E9
 
 #define YES 'y'
@@ -111,6 +110,8 @@ Route calculatePath(char option, int argc, char **argv) {
 			graph.edges = malloc(graph.countEdges * sizeof(int));
 			graph.weights = malloc(graph.countEdges * sizeof(int));
 
+			printf("\n== CALCULATING =====================================================\n");
+
 			printf("Reading the graph ...\n");
 			gcOpenGraph(&graph);
 			route.countNodes = graph.countNodes;
@@ -135,7 +136,15 @@ Route calculatePath(char option, int argc, char **argv) {
 				printf("Done!\n");
 			}
 
-			printf("The distance from the start node to the last node %d is: %d\n", (route.countNodes)-1, route.distance[(route.countNodes)-1]);
+			int distance = route.distance[(route.countNodes)-1];
+
+			printf("\n== RESULT ==========================================================\n");
+
+			if(distance != I){
+				printf("The distance from the start node to the last node %d is: %d\n", (route.countNodes)-1, distance);
+			} else {
+				printf("There does not exist any way from the start node to last node %d.\n", (route.countNodes)-1);
+			}
 
 			if(argc == 4) {
 				int target = atoi(argv[3]);
@@ -150,8 +159,9 @@ Route calculatePath(char option, int argc, char **argv) {
 		printf(ERROROPT);
 	}
 
+	printf("\n== BENCHMARK =======================================================\n");
 	double accum = (CALCULATION_END.tv_sec - CALCULATION_START.tv_sec) + (CALCULATION_END.tv_nsec - CALCULATION_START.tv_nsec) / BILLION;
-	printf("The pure calculation took %lf seconds.\n", accum);
+	printf("The pure calculation took %lf seconds.\n\n", accum);
 
 	return route;
 }
@@ -159,43 +169,49 @@ Route calculatePath(char option, int argc, char **argv) {
 void getResult(int target, int *predec, int *distance, int countNodes) {
 
 	int lTarget = target;
-	int *route =  malloc(sizeof(int));
+	int *route =  malloc(sizeof(int)*10);
 	int i = 0;
 	int count = 0;
-
-//	for(i = 0; i<countNodes;i++) {
-//		printf("%d ", predec[i]);
-//
-//	}
 
 	if(target >= countNodes) {
 		printf("ERROR!. The target does not exist.\n");
 	} else {
+
+		int success = 1;
 
 		while(lTarget != 0) {
 			route[count] = lTarget;
 			count++;
 			route = realloc(route, (count+1)*sizeof(int));
 			lTarget = predec[lTarget];
+			if(lTarget == -1){
+				lTarget = 0;
+				success = 0;
+			}
 		}
-		route[count] = 0;
 
-	printf("The distance from the start node to node %d is: %d\n", target, distance[target]);
-	printf("The best route: ");
+		if (success) {
+			route[count] = 0;
+			printf("The distance from the start node to node %d is: %d\n", target, distance[target]);
+			printf("The best route: ");
 
-	for (i = count; i >= 0; i--) {
-		if(i == 0) {
-			printf("%d", route[i]);
+			for (i = count; i >= 0; i--) {
+				if (i == 0) {
+					printf("%d", route[i]);
+				} else {
+					printf("%d >> ", route[i]);
+				}
+
+			}
 		} else {
-			printf("%d >> ", route[i]);
+			printf("There does not exist any way from the start node to node %d.", target);
 		}
 
-	}
+
 	printf("\n");
 	free(route);
 	}
 }
-
 
 /**
  * Display the help text
@@ -254,9 +270,4 @@ int mainProgram(int argc, char **argv) {
 
 	return EXIT_SUCCESS;
 }
-
-void myClock(time_t start) {
-	printf("%.1f: ",difftime(time(NULL),start));
-}
-
 

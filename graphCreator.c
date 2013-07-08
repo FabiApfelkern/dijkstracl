@@ -12,11 +12,7 @@
 #include "graphCreator.h"
 #include "graphStruct.h"
 
-#define MAX 7
-#define I 998
-
 const char* GRAPHPATH = "graphs";
-const char* RESULTPATH = "results";
 
 /**
  * Checks, if the file exists already
@@ -45,13 +41,6 @@ char* gcBuildPath(char* graphName) {
 	int size = strlen(graphName) + strlen(GRAPHPATH) + 2;
 	char* path = malloc(size);
 	snprintf(path, size, "%s/%s", GRAPHPATH, graphName);
-	return path;
-}
-
-char* gcBuildResultPath(char* name) {
-	int size = strlen(name) + strlen(RESULTPATH) + 2;
-	char* path = malloc(size);
-	snprintf(path, size, "%s/%s", RESULTPATH, name);
 	return path;
 }
 
@@ -140,41 +129,9 @@ void gcCreateRandomGraph(Graph *graph) {
 		}
 	}
 
-//	for(i = 0; i < graph->countEdges; i++) {
-//
-//		while(edge != i) {
-//			edge = (rand() % graph->countNodes);
-//		}
-//
-//		graph->edges[i] =
-//		graph->weights[i] = (rand() % 15) + 1;
-//
-//	}
 }
 
-int gcSaveResult(char* name, int* predec, int* distance, int size) {
 
-	FILE *file;
-	char* path = gcBuildResultPath(name);
-	file = fopen(path, "w+");
-	if (!file) {
-		return 0;
-	}
-
-	int i;
-	fprintf(file, "%d\n", size);
-	for (i = 0; i < size; i++) {
-		fprintf(file, "%d ", distance[i]);
-	}
-	fprintf(file, "\n");
-	for (i = 0; i < size; i++) {
-		fprintf(file, "%d ", predec[i]);
-	}
-	fprintf(file, "\n");
-	fclose(file);
-
-	return 1;
-}
 
 
 

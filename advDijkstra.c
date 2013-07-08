@@ -6,8 +6,6 @@
  */
 
 
-#define I 998
-
 #include "advDijkstra.h"
 #include "commonDijkstra.h"
 #include "core.h"
