@@ -9,13 +9,13 @@ __kernel void dijkstraKernel1(
 		__global int *distance,
 		__global int *updateDistance,
 		__global int *preced,
+		__global int *updatePreced,
 		__global int *visited,
 		__global int *nodes,
 		__global int *edges,
 		__global int *weights,
 		int countNodes,
-		int countEdges,
-		__global int *lastEdge
+		int countEdges
 		)
 {
 	
@@ -39,10 +39,9 @@ __kernel void dijkstraKernel1(
 			edge = edges[i];
 			
 			old = distance[t] + weights[i];
-			if(old < updateDistance[edge]) {
+			if(old <= updateDistance[edge]) {
 				updateDistance[edge] = old;
-				*lastEdge = t;
-				preced[edge] = t;
+				updatePreced[edge] = t;
 			}
 			
 		}
@@ -53,19 +52,20 @@ __kernel void dijkstraKernel1(
 __kernel void dijkstraKernel2(
 		__global int *distance,
 		__global int *updateDistance,
-		__global int *predec,
-		__global int *visited,
-		__global int *lastEdge
+		__global int *preced,
+		__global int *updatePreced,
+		__global int *visited
 		)
 {
 	int t = get_global_id(0);
 
 	if (distance[t] > updateDistance[t]) {	
 		distance[t] = updateDistance[t];
-		predec[t] = *lastEdge;
+		preced[t] = updatePreced[t];
 		visited[t] = 0;
 	}
 
+	updatePreced[t] = preced[t];
 	updateDistance[t] = distance[t];
 
 }

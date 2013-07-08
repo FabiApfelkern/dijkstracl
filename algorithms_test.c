@@ -1,12 +1,16 @@
 #include <assert.h>
 
 #include "graphCreator.c"
+#include "commonDijkstra.c"
 #include "clDijkstra.c"
 #include "advDijkstra.c"
 #include "graphStruct.h"
 #include "core.c"
 #include "basicDijkstra.c"
 
+void test__advDijkstra(Graph *graph, Route *route, int start);
+void test__clDijkstra(Graph *graph, Route *route, int start);
+void test__basicDijkstra(Graph *graph, Route *route, int start);
 
 void test__advDijkstra(Graph *graph, Route *route, int start)
 {
@@ -38,11 +42,11 @@ void test__clDijkstra(Graph *graph, Route *route, int start)
 	assert(route->distance[4] == 6);
 	assert(route->distance[5] == 5);
 
-//
-//	int i;
-//	for(i=0;i<route->countNodes;i++) {
-//		printf("%d\n", route->predec[i]);
-//	}
+
+	int i;
+	for(i=0;i<route->countNodes;i++) {
+		printf("%d\n", route->predec[i]);
+	}
 
 
 	assert(route->predec[0] == -1);

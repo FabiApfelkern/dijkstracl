@@ -13,62 +13,11 @@
 #include <stdlib.h>
 #include <CL/cl.h>
 #include <math.h>
-#include "clDijkstra.h"
-
-#include "core.h"
 #include <time.h>
 
-static char *read_file_contents(const char *filename)
-{
-	long size;
-	char *ret = NULL;
-	char *contents = NULL;
-	FILE *fh;
-
-	if (!(fh = fopen(filename,"r")))
-		return NULL;
-
-	fseek(fh,0,SEEK_END);
-	size = ftell(fh);
-	if (size < 1)
-		goto out;
-	fseek(fh,0,SEEK_SET);
-
-	if (!(contents = malloc(size+1)))
-		goto out;
-	if ((fread(contents, 1, size, fh) != size))
-		goto out;
-
-	contents[size] = 0;
-
-	ret = contents;
-	contents = NULL;
-out:
-	fclose(fh);
-	free(contents);
-	return ret;
-}
-
-int clNodesEmpty(int *nodes, int dimension) {
-	int i;
-	for (i = 0; i < dimension; i++) {
-		if (nodes[i] == 0)
-			return 0;
-	}
-	return 1;
-}
-
-void clInit(Route *route, int start, int *nodes) {
-
-	int i;
-	for (i = 0; i < route->countNodes; i++) {
-		route->distance[i] = I;
-		route->predec[i] = -1;
-		nodes[i] = 0;
-	}
-	route->distance[start] = 0;
-}
-
+#include "commonDijkstra.h"
+#include "clDijkstra.h"
+#include "core.h"
 
 void clDijkstra(Graph *graph, Route *route, int start) {
 
@@ -182,21 +131,24 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 	/******** Dijkstra itself *********/
 
 	int *nodes = malloc(graph->countNodes * sizeof(int));
-	clInit(route, start, nodes);
+	init(route, start, nodes);
 
 	int *updateDistance = malloc(graph->countNodes * sizeof(int));
+	int *updatePredec = malloc(graph->countNodes * sizeof(int));
 	int i;
 	for(i = 0; i < graph->countNodes; i++) {
 		updateDistance[i] = I;
+		updatePredec[i] = -1;
 	}
 	updateDistance[0] = 0;
-	int lastEdge;
+
 
 
 	/* Allocate the input memory for the kernel. */
 	cl_mem clDistance = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countNodes, route->distance, &error);
 	cl_mem clUpdateDistance = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countNodes, updateDistance, &error);
 	cl_mem clPreced = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countNodes, route->predec, &error);
+	cl_mem clUpdatePredec = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countNodes, updatePredec, &error);
 	cl_mem clVisited = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countNodes, nodes, &error);
 	cl_mem clNodes = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countNodes, graph->nodes, &error);
 	free(graph->nodes);
@@ -204,7 +156,6 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 	free(graph->edges);
 	cl_mem clWeights = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countEdges, graph->weights, &error);
 	free(graph->weights);
-	cl_mem clLastEdge = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int), &lastEdge, &error);
 	if (error != CL_SUCCESS)
 	{
 		fprintf(stderr,"Couldn't create buffers!\n");
@@ -222,13 +173,13 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 	error = clSetKernelArg(kernel1, 0, sizeof(cl_mem), &clDistance);
 	error = clSetKernelArg(kernel1, 1, sizeof(cl_mem), &clUpdateDistance);
 	error = clSetKernelArg(kernel1, 2, sizeof(cl_mem), &clPreced);
-	error = clSetKernelArg(kernel1, 3, sizeof(cl_mem), &clVisited);
-	error = clSetKernelArg(kernel1, 4, sizeof(cl_mem), &clNodes);
-	error = clSetKernelArg(kernel1, 5, sizeof(cl_mem), &clEdges);
-	error = clSetKernelArg(kernel1, 6, sizeof(cl_mem), &clWeights);
-	error = clSetKernelArg(kernel1, 7, sizeof(int), &graph->countNodes);
-	error = clSetKernelArg(kernel1, 8, sizeof(int), &graph->countEdges);
-	error = clSetKernelArg(kernel1, 9, sizeof(cl_mem), &clLastEdge);
+	error = clSetKernelArg(kernel1, 3, sizeof(cl_mem), &clUpdatePredec);
+	error = clSetKernelArg(kernel1, 4, sizeof(cl_mem), &clVisited);
+	error = clSetKernelArg(kernel1, 5, sizeof(cl_mem), &clNodes);
+	error = clSetKernelArg(kernel1, 6, sizeof(cl_mem), &clEdges);
+	error = clSetKernelArg(kernel1, 7, sizeof(cl_mem), &clWeights);
+	error = clSetKernelArg(kernel1, 8, sizeof(int), &graph->countNodes);
+	error = clSetKernelArg(kernel1, 9, sizeof(int), &graph->countEdges);
 	if (error != CL_SUCCESS)
 	{
 		fprintf(stderr,"Couldn't set argument for kernel!\n");
@@ -247,8 +198,8 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 	error = clSetKernelArg(kernel2, 0, sizeof(cl_mem), &clDistance);
 	error = clSetKernelArg(kernel2, 1, sizeof(cl_mem), &clUpdateDistance);
 	error = clSetKernelArg(kernel2, 2, sizeof(cl_mem), &clPreced);
-	error = clSetKernelArg(kernel2, 3, sizeof(cl_mem), &clVisited);
-	error = clSetKernelArg(kernel2, 4, sizeof(cl_mem), &clLastEdge);
+	error = clSetKernelArg(kernel2, 3, sizeof(cl_mem), &clUpdatePredec);
+	error = clSetKernelArg(kernel2, 4, sizeof(cl_mem), &clVisited);
 	if (error != CL_SUCCESS)
 	{
 		fprintf(stderr,"Couldn't set argument for kernel!\n");
@@ -262,7 +213,7 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 
 	clock_gettime(CLOCK_REALTIME, &CALCULATION_START);
 	// As long there are any nodes lefts
-	while (!clNodesEmpty(nodes, graph->countNodes)) {
+	while (!nodesEmpty(nodes, graph->countNodes)) {
 
 
 		error = clEnqueueNDRangeKernel(cq, kernel1, 1, NULL, &worksize, NULL, 0, NULL, NULL);
@@ -316,4 +267,34 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 	if (error != CL_SUCCESS)
 	fprintf(stderr, "Error number %d\n", error);
 
+}
+
+
+char *read_file_contents(const char *filename) {
+	long size;
+	char *ret = NULL;
+	char *contents = NULL;
+	FILE *fh;
+
+	if (!(fh = fopen(filename, "r")))
+		return NULL;
+
+	fseek(fh, 0, SEEK_END);
+	size = ftell(fh);
+	if (size < 1)
+		goto out;
+	fseek(fh, 0, SEEK_SET);
+
+	if (!(contents = malloc(size + 1)))
+		goto out;
+	if ((fread(contents, 1, size, fh) != size))
+		goto out;
+
+	contents[size] = 0;
+
+	ret = contents;
+	contents = NULL;
+	out: fclose(fh);
+	free(contents);
+	return ret;
 }

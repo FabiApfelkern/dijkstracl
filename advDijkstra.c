@@ -9,36 +9,16 @@
 #define I 998
 
 #include "advDijkstra.h"
+#include "commonDijkstra.h"
 #include "core.h"
 #include <time.h>
-
-int advNodesEmpty(int *nodes, int countNodes) {
-	int i;
-	for (i = 0; i < countNodes; i++) {
-		if (nodes[i] == 0)
-			return 0;
-	}
-	return 1;
-}
-
-
-void advInit(Route *route, int start, int *nodes) {
-
-	int i;
-	for (i = 0; i < route->countNodes; i++) {
-		route->distance[i] = I;
-		route->predec[i] = -1;
-		nodes[i] = 0;
-	}
-	route->distance[start] = 0;
-}
 
 
 void advDijkstra(Graph *graph, Route *route, int start) {
 
 	clock_gettime(CLOCK_REALTIME, &CALCULATION_START);
 	int *q = malloc(graph->countNodes * sizeof(int));
-	advInit(route, start, q);
+	init(route, start, q);
 
 	int *updateDistance = malloc(graph->countNodes * sizeof(int));
 	int *updatePredec = malloc(graph->countNodes * sizeof(int));
@@ -50,7 +30,7 @@ void advDijkstra(Graph *graph, Route *route, int start) {
 	updateDistance[0] = 0;
 
 	// As long there are any nodes left
-	while (!advNodesEmpty(q, graph->countNodes)) {
+	while (!nodesEmpty(q, graph->countNodes)) {
 
 		int t;
 		for (t = 0; t < graph->countNodes; t++) {

@@ -191,6 +191,7 @@ void getResult(int target, int *predec, int *distance, int countNodes) {
 		}
 
 	}
+	printf("\n");
 	free(route);
 	}
 }
@@ -203,7 +204,7 @@ void help(void){
 
     printf("\n=== DIJKSTRA CL ===\n\n");
     printf("Options:\n");
-    printf("\t-%c <name>: %s\n", GEN, GENTEXT);
+    printf("\t-%c <name> <no. of nodes> [no. of edges]: %s\n", GEN, GENTEXT);
     printf("\t-%c <graph> [node]: %s\n", BASIC, BASICTEXT);
     printf("\t-%c <graph> [node]: %s\n", CL, CLTEXT);
     printf("\t-%c <graph> [node]: %s\n", OPT, OPTTEXT);

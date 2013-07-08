@@ -12,8 +12,6 @@
 #include "graphStruct.h"
 
 void clDijkstra(Graph *graph, Route *route, int start);
-void clInit(Route *route, int start, int *nodes);
-int clNodesEmpty(int *nodes, int dimension);
-
+char *read_file_contents(const char *filename);
 
 #endif /* BASICDIJKSTRA_H_ */

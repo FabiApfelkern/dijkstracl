@@ -12,9 +12,6 @@
 #include "graphStruct.h"
 
 void basicDijkstra(Graph *graph, Route *route, int start);
-void init(Route *route, int start, int *nodes);
 void updateDistance(Route *route, int weight, int node1, int node2);
-int nodesEmpty(int *nodes, int countNodes);
-
 
 #endif /* BASICDIJKSTRA_H_ */
