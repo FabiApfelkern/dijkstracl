@@ -46,89 +46,44 @@ Graph initGraph(char* graphName, int countNodes, int countEdges) {
  */
 void createGraph(int argc, char **argv) {
 
-	if(argc == 3) {
+	if(argc >= 4) {
 
+		// Proceed Arguments
 		char* graphName = argv[2];
-		int countNodes;
-		int countEdges;
-		int step = 1;
-		int scan;
+		int countNodes = atoi(argv[3]);
+		int countEdges = 3;
 
 		if(strcmp("ref", graphName) == 0) {
 			printf("ERROR! This graph name is reserved and read-only.\n");
-			step = 0;
+			return;
 		}
 
-		while(step){
-			char input;
-
-			switch (step) {
-				case 1:
-					if(gcGraphExists(graphName) == 1) {
-						printf("The graph %s does already exist. Do you want to override it? [n/y]\n", graphName);
-						scan = scanf("%c", &input);
-						if(input == YES) {
-							step++;
-						} else {
-							step = 0;
-						}
-					} else {
-						step++;
-					}
-					break;
-
-				case 2:
-					printf("How many nodes do you want to create?\n");
-					scan = scanf("%d", &countNodes);
-					if(countNodes >= 1 && countNodes < INT_MAX) {
-						step++;
-					} else {
-						printf("ERROR! Wrong input format.\n");
-					}
-					break;
-
-				case 3:
-					printf("How many connections does each node has?\n");
-					scan = scanf("%d", &countEdges);
-					if (countEdges >= 1 && countEdges < INT_MAX) {
-						step++;
-					} else {
-						printf("ERROR! Wrong input format.\n");
-					}
-					break;
-
-				case 4:
-					printf("Creating a graph '%s' with %d nodes and %d edges per node...\n", graphName, countNodes, countEdges);
-
-					Graph graph;
-					graph.name = graphName;
-					graph.countNodes = countNodes;
-					graph.nmbEdges = countEdges;
-					graph.countEdges = graph.nmbEdges * graph.countNodes;
-					graph.nodes = malloc(graph.countNodes *  sizeof(int));
-					graph.edges = malloc(graph.countEdges * sizeof(int));
-					graph.weights = malloc(graph.countEdges * sizeof(int));
-
-					gcCreateRandomGraph(&graph);
-					if(!gcSaveGraph(&graph)) {
-						printf("ERROR! Could not write graph to disk, please try again.");
-					} else {
-						printf("SUCCESS! Created Graph.\n");
-					}
-
-					free(graph.nodes);
-					free(graph.edges);
-					free(graph.weights);
-					step = 0;
-					break;
-
-				default:
-					break;
-			}
-
-			fseek(stdin,0,SEEK_END);
+		if(argc == 5) {
+			countEdges = atoi(argv[4]);
 		}
-		(void)scan;
+
+		printf("Creating a graph '%s' with %d nodes and %d edges per node...\n", graphName, countNodes, countEdges);
+
+		Graph graph;
+		graph.name = graphName;
+		graph.countNodes = countNodes;
+		graph.nmbEdges = countEdges;
+		graph.countEdges = graph.nmbEdges * graph.countNodes;
+		graph.nodes = malloc(graph.countNodes *  sizeof(int));
+		graph.edges = malloc(graph.countEdges * sizeof(int));
+		graph.weights = malloc(graph.countEdges * sizeof(int));
+
+		gcCreateRandomGraph(&graph);
+		if(!gcSaveGraph(&graph)) {
+			printf("ERROR! Could not write graph to disk, please try again.");
+		} else {
+			printf("SUCCESS! Created Graph.\n");
+		}
+
+		free(graph.nodes);
+		free(graph.edges);
+		free(graph.weights);
+
 
 	} else {
 		printf(ERROROPT);
