@@ -169,7 +169,8 @@ Route calculatePath(char option, int argc, char **argv) {
 void getResult(int target, int *predec, int *distance, int countNodes) {
 
 	int lTarget = target;
-	int *route =  malloc(sizeof(int)*10);
+	int allocSize = 10;
+	int *route =  malloc(sizeof(int)*allocSize);
 	int i = 0;
 	int count = 0;
 
@@ -182,7 +183,11 @@ void getResult(int target, int *predec, int *distance, int countNodes) {
 		while(lTarget != 0) {
 			route[count] = lTarget;
 			count++;
-			route = realloc(route, (count+1)*sizeof(int));
+			if(count == allocSize){
+				allocSize = allocSize*2;
+				route = realloc(route, sizeof(int)*allocSize);
+			}
+
 			lTarget = predec[lTarget];
 			if(lTarget == -1){
 				lTarget = 0;
