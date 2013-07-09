@@ -1,5 +1,6 @@
 /**
  * @file core.c
+ * @brief Structures the program cycle
  */
 
 #include "core.h"
@@ -180,20 +181,23 @@ void getResult(int target, Route *result) {
 	int i = 0;
 	int count = 0;
 
+	// Node is not part of the graph
 	if(target >= result->countNodes) {
 		printf("ERROR!. The target does not exist.\n");
 	} else {
 
 		int success = 1;
 
+		// Traverse through predecessor array
 		while(lTarget != 0) {
+			// Add new stop on the route
 			route[count] = lTarget;
 			count++;
+			// Get more memory
 			if(count == allocSize){
 				allocSize = allocSize*2;
 				route = realloc(route, sizeof(int)*allocSize);
 			}
-
 			lTarget = result->predec[lTarget];
 			if(lTarget == -1){
 				lTarget = 0;
@@ -206,6 +210,7 @@ void getResult(int target, Route *result) {
 			printf("The distance from the start node to node %d is: %d\n", target, result->distance[target]);
 			printf("The best route: ");
 
+			// Print route backwards
 			for (i = count; i >= 0; i--) {
 				if (i == 0) {
 					printf("%d", route[i]);

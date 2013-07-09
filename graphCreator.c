@@ -1,24 +1,21 @@
 /**
  * @file graphCreator.c
+ * @brief Provides functions for the Graph creation and handling
  */
-
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-#include "graphCreator.h"
 #include "graphStruct.h"
-
-const char* GRAPHPATH = "graphs";
+#include "graphCreator.h"
 
 /**
- * Checks, if the file exists already
- *
- * @param graphName
- * @return 0 - file does not exist, 1 - file exists
+ * @brief Name of the folder to store the graph files
  */
+const char* GRAPHPATH = "graphs";
+
 int gcGraphExists(char* graphName) {
 	FILE *file;
 	char* path = gcBuildPath(graphName);
@@ -30,12 +27,6 @@ int gcGraphExists(char* graphName) {
 	}
 }
 
-/**
- * Creates the path to open graph file
- *
- * @param graphName
- * @return relative path to the graph file
- */
 char* gcBuildPath(char* graphName) {
 	int size = strlen(graphName) + strlen(GRAPHPATH) + 2;
 	char* path = malloc(size);
@@ -119,6 +110,7 @@ void gcCreateRandomGraph(Graph *graph) {
 
 		for(j=0; j < graph->nmbEdges; j++) {
 			edge = (rand() % graph->countNodes);
+			// Routes to node itself are now allowed
 			while(edge == i) {
 				edge = (rand() % graph->countNodes);
 			}

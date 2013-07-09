@@ -1,5 +1,6 @@
 /**
  * @file core.h
+ * @brief Structures the program cycle
  */
 
 #ifndef CORE_H_
@@ -17,7 +18,14 @@
 #include "advDijkstra.h"
 #include "graphStruct.h"
 
-struct timespec CALCULATION_START, CALCULATION_END;
+/**
+ * @brief Global variable for the time measurement
+ */
+struct timespec CALCULATION_START;
+/**
+ * @brief Global variable for the time measurement
+ */
+struct timespec CALCULATION_END;
 
 #define I 998
 
@@ -47,27 +55,42 @@ void createGraph(int argc, char **argv);
  * Furthermore it outputs the calculation time of the respective
  * algorithm. It return the calculated route.
  *
- * @param option
+ * @param option The desired calculating method ('b', 'o', 'c')
  * @param argc
  * @param argv
- * @return Route
+ * @return Route The calculated route
  */
 Route calculatePath(char option, int argc, char **argv);
 
 /**
+ * @brief Displays the precise route to the specified target node
  *
+ * The function traverses the predecessor array to determine the precise
+ * route from the start node (0) to the specified target node and displays
+ * it. If the node is not part of the graph or not reachable it displays
+ * adequate error messages.
  *
- * @param target
- * @param Route route
+ * @param target The desired target
+ * @param Route A already calculated Route struct
  */
 void getResult(int target, Route *route);
 
 /**
- * Displays the help text
+ * @brief Displays the help text
  */
 void help(void);
-int mainProgram(int argc, char **argv);
-void myClock(time_t start);
 
+/**
+ * @brief Encapsulates the main entry point.
+ *
+ * This function should be called from the C-Main-Function. (see @link dijkstracl.c @endlink)
+ * Some pre-validation of the user input is performed and the
+ * selected option is delegated to a matching function.
+ *
+ * @param argc
+ * @param argv
+ * @return Status code
+ */
+int mainProgram(int argc, char **argv);
 
 #endif /* CORE_H_ */

@@ -1,5 +1,6 @@
 /**
  * @file basicDijkstra.c
+ * @brief A very basic Dijkstra algorithm without any optimization
  */
 
 
@@ -47,8 +48,6 @@ void basicDijkstra(Graph *graph, Route *route, int start){
 		q[node1] = 1;
 
 		// Determine distance for every neighbor
-		// Do this in parallel
-
 		int begin = graph->nodes[node1];
 		int end;
 		if(node1 + 1 < (graph->countNodes)) {

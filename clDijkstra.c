@@ -1,5 +1,6 @@
 /**
  * @file clDijkstra.c
+ * @brief The Dijkstra algorithm with OpenCL
  */
 
 #include <stdio.h>
@@ -120,8 +121,6 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 		goto out;
 	}
 
-
-
 	/******** Dijkstra itself *********/
 
 	int *nodes = malloc(graph->countNodes * sizeof(int));
@@ -135,8 +134,6 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 		updatePredec[i] = -1;
 	}
 	updateDistance[0] = 0;
-
-
 
 	/* Allocate the input memory for the kernel. */
 	cl_mem clDistance = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,  sizeof(int)*graph->countNodes, route->distance, &error);
@@ -202,7 +199,6 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 
 
 	cl_event readDone;
-
 	const size_t worksize = graph->countNodes;
 
 	clock_gettime(CLOCK_REALTIME, &CALCULATION_START);
@@ -245,6 +241,7 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 	}
 	clWaitForEvents(1, &readDone);
 
+	// Release memory
 	clReleaseMemObject(clDistance);
 	clReleaseMemObject(clVisited);
 	clReleaseMemObject(clNodes);
@@ -252,7 +249,6 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 	clReleaseMemObject(clUpdateDistance);
 	clReleaseMemObject(clEdges);
 	clReleaseMemObject(clWeights);
-
 	free(nodes);
 	free(updateDistance);
 

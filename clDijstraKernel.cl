@@ -1,9 +1,12 @@
 /**
  * @file clDijstraKernel.cl
+ * @brief The OpenCL Dijkstra Kernel
  */
 
 #define I 998
-
+/**
+ * @param distance A filled Graph struct
+ */
 __kernel void dijkstraKernel1(
 		__global int *distance,
 		__global int *updateDistance,

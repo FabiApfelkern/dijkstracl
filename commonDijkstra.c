@@ -1,5 +1,6 @@
 /**
  * @file commonDijkstra.c
+ * @brief Common function, uses by all Dijkstra implementations
  */
 
 #include "commonDijkstra.h"
