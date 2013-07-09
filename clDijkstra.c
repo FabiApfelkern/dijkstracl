@@ -219,7 +219,7 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 			goto out;
 		}
 
-		/* Read the result back into buf2 */
+		// Read the result back into the nodes array
 		error = clEnqueueReadBuffer(cq, clVisited, CL_FALSE, 0, sizeof(int)*graph->countNodes, nodes, 0, NULL, &readDone);
 		if (error != CL_SUCCESS)
 		{
@@ -231,7 +231,7 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 	}
 	clock_gettime(CLOCK_REALTIME, &CALCULATION_END);
 
-	/* Read the result back into buf2 */
+	// Read the result back into the route struct
 	error = clEnqueueReadBuffer(cq, clDistance, CL_FALSE, 0, sizeof(int)*graph->countNodes, route->distance, 0, NULL, &readDone);
 	error = clEnqueueReadBuffer(cq, clPreced, CL_FALSE, 0, sizeof(int)*graph->countNodes, route->predec, 0, NULL, &readDone);
 	if (error != CL_SUCCESS)
@@ -256,9 +256,7 @@ void clDijkstra(Graph *graph, Route *route, int start) {
 	out:
 	if (error != CL_SUCCESS)
 	fprintf(stderr, "Error number %d\n", error);
-
 }
-
 
 char *read_file_contents(const char *filename) {
 	long size;

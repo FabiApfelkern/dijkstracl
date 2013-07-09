@@ -1,5 +1,6 @@
 /**
  * @file algorithms_test.c
+ * @brief Tests the accuracy of the different Dijkstra algorithms
  */
 
 #include <assert.h>
@@ -12,8 +13,31 @@
 #include "core.c"
 #include "basicDijkstra.c"
 
+/**
+ * @brief Tests the optimized Dijkstra algorithm
+ *
+ * @param graph
+ * @param route
+ * @param start
+ */
 void test__advDijkstra(Graph *graph, Route *route, int start);
+
+/**
+ * @brief Tests the OpenCL Dijkstra algorithm
+ *
+ * @param graph
+ * @param route
+ * @param start
+ */
 void test__clDijkstra(Graph *graph, Route *route, int start);
+
+/**
+ * @brief Tests the basic Dijkstra algorithm
+ *
+ * @param graph
+ * @param route
+ * @param start
+ */
 void test__basicDijkstra(Graph *graph, Route *route, int start);
 
 void test__advDijkstra(Graph *graph, Route *route, int start)
@@ -87,10 +111,18 @@ void test__basicDijkstra(Graph *graph, Route *route, int start)
 }
 
 /**
- * Main entry for the test.
+ * @brief Entry point of the tests and preparation
+ *
+ * The function opens the reference graph from "graphs/ref"
+ * and calls the different algorithms with this graph.
+ *
+ * @param argc
+ * @param argv
+ * @return
  */
 int main(int argc, char **argv)
 {
+	// Prepare the Graph and Route struct
 	char* graphName = "ref";
 
 	Graph graph;
@@ -110,6 +142,7 @@ int main(int argc, char **argv)
 	route.predec = malloc(graph.countNodes * sizeof(int));
 	route.distance = malloc(graph.countNodes * sizeof(int));
 
+	// Call the tests
 	test__basicDijkstra(&graph, &route, 0);
 	test__advDijkstra(&graph, &route, 0);
 	test__clDijkstra(&graph, &route, 0);
