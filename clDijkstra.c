@@ -17,7 +17,7 @@
 void clDijkstra(Graph *graph, Route *route, int start) {
 
 	/* The Kernels */
-	char *dijkstraKernel = "clDijstraKernel.txt";
+	char *dijkstraKernel = "clDijstraKernel.cl";
 
 	/* The error variable. We need it everywhere */
 	cl_int error;
